@@ -19,6 +19,6 @@ const useDate = () => {
   const monthName = monthNames[date.getMonth()];
   const year = date.getFullYear();
   const localTime = date.toLocaleTimeString();
-  return { dateNow, monthName, year, localTime };
+  return { dateNow, monthName, year };
 };
 export default useDate;
