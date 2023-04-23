@@ -11,13 +11,13 @@ export const weatherApi = createApi({
     getCurrentCityWeather: builder.query({
       query: (city) => `/weather?q=${city}&units=metric&appid=${API_KEY}`,
     }),
-    // get5DayForecast: builder.query({
-    //     query: (city) => `/forecast?q=${city}&units=metric&appid=${API_KEY}`,
-    // }),
+    get5DayForecast: builder.query({
+        query: (city) => `/forecast?q=${city}&units=metric&appid=${API_KEY}`,
+    }),
     // getHistoricalWeather: builder.query({
     //     query: (city, date) => `/onecall/timemachine?lat=${city.lat}&lon=${city.lon}&dt=${date}&units=metric&appid=${API_KEY}`,
     // })
   }),
 });
 
-export const { useGetCurrentCityWeatherQuery, useLazyGetCurrentCityWeatherQuery } = weatherApi;
+export const { useGetCurrentCityWeatherQuery, useGet5DayForecastQuery } = weatherApi;

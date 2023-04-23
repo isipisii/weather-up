@@ -1,9 +1,6 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import {
-  useGetCurrentCityWeatherQuery,
-  useLazyGetCurrentCityWeatherQuery,
-} from "../services/weather";
+import { useGetCurrentCityWeatherQuery, useGet5DayForecastQuery } from "../services/weather";
 import useDate from "../hooks/useDate";
 
 import WeatherSideBarDetails from "../components/WeatherSideBarDetails";
@@ -15,20 +12,19 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const [currentCity, setCurrentCity] = useState("Manila");
+  const { monthName, year, dateNow } = useDate();
   const searchRef = useRef(null);
   const {
     data: currentWeatherData,
     error,
     isLoading,
   } = useGetCurrentCityWeatherQuery(currentCity);
-  const { monthName, year, dateNow } = useDate();
+  const {data: forecastData, isLoading: foreCastDataLoading} = useGet5DayForecastQuery(currentCity);
 
-  // const [getCurrentCityWeather, { data, isLoading: isLazyLoading }] = useLazyGetCurrentCityWeatherQuery();
 
   function handleSubmit(e) {
     e.preventDefault();
     setCurrentCity(searchRef.current.value);
-    searchRef.current.value = "";
   }
 
   console.log(currentWeatherData);
@@ -37,7 +33,7 @@ const Home = () => {
     <div className="w-full h-[200vh] pl-8">
       <div className="flex justify-between">
         {/* left Info */}
-        <div className="w-[55%] ">
+        <div className="w-[56%] ">
           {/* Upper Part */}
           <div className="flex justify-between items-center py-10 border-b border-slate-100">
             <div>
@@ -59,7 +55,7 @@ const Home = () => {
                 <input
                   className="outline-none border-none rounded py-3  text-sm bg-[#EEF2F3]"
                   type="text"
-                  placeholder="Search city"
+                  placeholder="Search location "
                   ref={searchRef}
                 />
               </form>
@@ -87,7 +83,7 @@ const Home = () => {
 
         {/* Right Info */}
         {/* TODO */}
-        <WeatherSideBarDetails />
+        <WeatherSideBarDetails currentWeatherData={currentWeatherData} foreCastData={forecastData} />
       </div>
     </div>
   );
