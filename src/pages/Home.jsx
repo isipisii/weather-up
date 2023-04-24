@@ -5,26 +5,54 @@ import {
 } from "../services/weather";
 
 import WeatherSideBarDetails from "../components/WeatherSideBarDetails";
-import WindSpeedCard from "../components/WindSpeedCard";
-import WindDirectionCard from "../components/WindDirectionCard";
-import GustinessCard from "../components/GustinessCard";
+import  WindPropertyCard  from "../components/ WindPropertyCard ";
 import TodaysForecastCard from "../components/TodaysForecastCard";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBell } from "@fortawesome/free-regular-svg-icons";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import moment from 'moment-timezone'
+import { faMagnifyingGlass, faWind, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment-timezone";
 
 const Home = () => {
   const [currentCity, setCurrentCity] = useState("Manila");
   const [oneDayForecasts, setOneDayForecasts] = useState([]);
   const searchRef = useRef(null);
-  const { data: currentWeatherData, isLoading } = useGetCurrentCityWeatherQuery(currentCity);
-  const { data: forecastData, isLoading: foreCastDataLoading } = useGet5DayForecastQuery(currentCity);
+  const { data: currentWeatherData, isLoading } =
+    useGetCurrentCityWeatherQuery(currentCity);
+  const { data: forecastData, isLoading: foreCastDataLoading } =
+    useGet5DayForecastQuery(currentCity);
 
-  const month = moment().utcOffset(currentWeatherData?.timezone / 60).format('MMMM')
-  const year = moment().utcOffset(currentWeatherData?.timezone / 60).format('YYYY')
-  const date = moment().utcOffset(currentWeatherData?.timezone / 60).format('dddd, MMMM Do YYYY')
+  const month = moment()
+    .utcOffset(currentWeatherData?.timezone / 60)
+    .format("MMMM");
+  const year = moment()
+    .utcOffset(currentWeatherData?.timezone / 60)
+    .format("YYYY");
+  const date = moment()
+    .utcOffset(currentWeatherData?.timezone / 60)
+    .format("dddd, MMMM Do YYYY");
+
+  const windProperties = [
+    {
+      title: "Wind Speed",
+      attribute: `${currentWeatherData?.wind?.speed} km/h`,
+      icon: faWind,
+    },
+    {
+      title: "Wind Direction",
+      attribute: `${currentWeatherData?.wind?.deg} °`,
+      icon: faLocationArrow,
+    },
+    {
+      title: "Gustiness",
+      attribute: `${
+        currentWeatherData?.wind?.gust
+          ? `${currentWeatherData?.wind?.gust} km/h`
+          : "No gust"
+      }`,
+      icon: faWind,
+    },
+  ];
 
   // Collected forecasts for today
   useEffect(() => {
@@ -90,18 +118,23 @@ const Home = () => {
               Today's Wind Overview
             </h2>
             <div className="mt-4 flex gap-4">
-              <WindSpeedCard currentWeatherData={currentWeatherData} />
-              <WindDirectionCard currentWeatherData={currentWeatherData} />
-              <GustinessCard currentWeatherData={currentWeatherData} />
+              {windProperties.map((windProperty, index) => (
+              <WindPropertyCard  windProperty={windProperty} />
+              ))}
             </div>
           </div>
 
           {/* Future forecasts  */}
           <div className="mt-4">
-            <h1 className="text-[#0F2443] font-semibold text-[1.2rem]">Today's forecast</h1>
+            <h1 className="text-[#0F2443] font-semibold text-[1.2rem] mb-4">
+              Today's forecast
+            </h1>
             <div className="flex gap-4 flex-col">
               {oneDayForecasts.map((oneDayForecast, index) => (
-                <TodaysForecastCard key={index} oneDayForecast={oneDayForecast} />
+                <TodaysForecastCard
+                  key={index}
+                  oneDayForecast={oneDayForecast}
+                />
               ))}
             </div>
           </div>

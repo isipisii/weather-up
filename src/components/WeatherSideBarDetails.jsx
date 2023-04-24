@@ -8,8 +8,8 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
   const [currentTime, setCurrentTime] = useState(moment().utcOffset(currentWeatherData?.timezone / 60).format(`h:mm A`));
 
   const sun = [
-    { name: "Sunrise", time: moment.unix(currentWeatherData?.sys?.sunrise).format("h:mm A"), fromNow: moment.unix(currentWeatherData?.sys?.sunrise).startOf('day').fromNow()},
-    { name: "Sunset", time: moment.unix(currentWeatherData?.sys?.sunset).format("h:mm A"), fromNow: moment.unix(currentWeatherData?.sys?.sunset).endOf('day').fromNow()},
+    { name: "Sunrise", time: moment.unix(currentWeatherData?.sys?.sunrise).format("h:mm A"), fromNow: moment.unix(currentWeatherData?.sys?.sunrise).startOf("night").fromNow()},
+    { name: "Sunset", time: moment.unix(currentWeatherData?.sys?.sunset).format("h:mm A"), fromNow: moment.unix(currentWeatherData?.sys?.sunset).endOf("night").fromNow()},
   ];
 
     // To keep the time updated whenever the city changes 
@@ -22,11 +22,11 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
 
   return (
     <div className="w-[400px] h-auto bg-gradient-to-r from-[#315a94] to-[#0a1f3d]">
-      <div className="w-auto h-full py-8 px-12">
+      <div className="w-auto h-full p-8">
         <div className="flex items-center justify-between">
           <div>
             <div className="flex gap-1">
-              <h2 className="text-white text-[2.2rem] font-bold">
+              <h2 className="text-white text-[2rem] font-bold">
                 {currentWeatherData?.name}
               </h2>
               <p className="text-[#ffffff9e] font-thin text-sm">
