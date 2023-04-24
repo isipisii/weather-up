@@ -1,46 +1,61 @@
-import React, { useRef } from "react";
-import { useState } from "react";
-import { useGetCurrentCityWeatherQuery, useGet5DayForecastQuery } from "../services/weather";
-import useDate from "../hooks/useDate";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  useGetCurrentCityWeatherQuery,
+  useGet5DayForecastQuery,
+} from "../services/weather";
 
 import WeatherSideBarDetails from "../components/WeatherSideBarDetails";
-import OverviewCard from "../components/OverViewCard";
+import WindSpeedCard from "../components/WindSpeedCard";
+import WindDirectionCard from "../components/WindDirectionCard";
+import GustinessCard from "../components/GustinessCard";
+import TodaysForecastCard from "../components/TodaysForecastCard";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBell } from "@fortawesome/free-regular-svg-icons";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import moment from 'moment-timezone'
 
 const Home = () => {
   const [currentCity, setCurrentCity] = useState("Manila");
-  const { monthName, year, dateNow } = useDate();
+  const [oneDayForecasts, setOneDayForecasts] = useState([]);
   const searchRef = useRef(null);
-  const {
-    data: currentWeatherData,
-    error,
-    isLoading,
-  } = useGetCurrentCityWeatherQuery(currentCity);
-  const {data: forecastData, isLoading: foreCastDataLoading} = useGet5DayForecastQuery(currentCity);
+  const { data: currentWeatherData, isLoading } = useGetCurrentCityWeatherQuery(currentCity);
+  const { data: forecastData, isLoading: foreCastDataLoading } = useGet5DayForecastQuery(currentCity);
 
+  const month = moment().utcOffset(currentWeatherData?.timezone / 60).format('MMMM')
+  const year = moment().utcOffset(currentWeatherData?.timezone / 60).format('YYYY')
+  const date = moment().utcOffset(currentWeatherData?.timezone / 60).format('dddd, MMMM Do YYYY')
 
+  // Collected forecasts for today
+  useEffect(() => {
+    function setForecasts() {
+      const forecastsArr = [];
+      for (let i = 0; i <= 5; i++) {
+        forecastsArr.push(forecastData?.list[i]);
+      }
+      setOneDayForecasts(forecastsArr);
+    }
+    setForecasts();
+  }, [forecastData?.list]);
+
+  // handle sumbit of search feature
   function handleSubmit(e) {
     e.preventDefault();
     setCurrentCity(searchRef.current.value);
   }
 
-  console.log(currentWeatherData);
-
   return (
-    <div className="w-full h-[200vh] pl-8">
-      <div className="flex justify-between">
+    <div className="w-full h-auto">
+      <div className="flex justify-between relative ml-10 overflow-y-auto">
         {/* left Info */}
-        <div className="w-[56%] ">
+        <div>
           {/* Upper Part */}
           <div className="flex justify-between items-center py-10 border-b border-slate-100">
             <div>
               <h2 className="text-[#0F2443] font-bold text-[1.5rem]">
-                {monthName} {year}
+                {month} {year}
               </h2>
-              <p className="text-[#75787aae] text-[.9rem]">{dateNow}</p>
+              <p className="text-[#75787aae] text-[.9rem]">{date}</p>
             </div>
 
             <div className="flex gap-4 items-center">
@@ -55,7 +70,7 @@ const Home = () => {
                 <input
                   className="outline-none border-none rounded py-3  text-sm bg-[#EEF2F3]"
                   type="text"
-                  placeholder="Search location "
+                  placeholder="Search location"
                   ref={searchRef}
                 />
               </form>
@@ -69,21 +84,35 @@ const Home = () => {
               />
             </div>
           </div>
-          {/* Middle Part */}
+          {/* Middle Part Wind overview */}
           <div className="mt-[2rem]">
             <h2 className="text-[#0F2443] font-semibold text-[1.2rem]">
-              Today's Overview
+              Today's Wind Overview
             </h2>
-            <div className="mt-4 flex justify-between">
-              <OverviewCard currentWeatherData={currentWeatherData} />
-              <OverviewCard currentWeatherData={currentWeatherData} />
+            <div className="mt-4 flex gap-4">
+              <WindSpeedCard currentWeatherData={currentWeatherData} />
+              <WindDirectionCard currentWeatherData={currentWeatherData} />
+              <GustinessCard currentWeatherData={currentWeatherData} />
+            </div>
+          </div>
+
+          {/* Future forecasts  */}
+          <div className="mt-4">
+            <h1 className="text-[#0F2443] font-semibold text-[1.2rem]">Today's forecast</h1>
+            <div className="flex gap-4 flex-col">
+              {oneDayForecasts.map((oneDayForecast, index) => (
+                <TodaysForecastCard key={index} oneDayForecast={oneDayForecast} />
+              ))}
             </div>
           </div>
         </div>
 
         {/* Right Info */}
         {/* TODO */}
-        <WeatherSideBarDetails currentWeatherData={currentWeatherData} foreCastData={forecastData} />
+        <WeatherSideBarDetails
+          currentWeatherData={currentWeatherData}
+          foreCastData={forecastData}
+        />
       </div>
     </div>
   );
