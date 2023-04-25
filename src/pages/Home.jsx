@@ -1,13 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   useGetCurrentCityWeatherQuery,
   useGet5DayForecastQuery,
 } from "../services/weather";
 
 import WeatherSideBarDetails from "../components/WeatherSideBarDetails";
-import  WindPropertyCard  from "../components/ WindPropertyCard ";
+import WindPropertyCard  from "../components/WindPropertyCard";
 import TodaysForecastCard from "../components/TodaysForecastCard";
 
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBell } from "@fortawesome/free-regular-svg-icons";
 import { faMagnifyingGlass, faWind, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
@@ -16,6 +17,7 @@ import moment from "moment-timezone";
 const Home = () => {
   const [currentCity, setCurrentCity] = useState("Manila");
   const [oneDayForecasts, setOneDayForecasts] = useState([]);
+  const [showClearButton, setShowClearButton] = useState(false);
   const searchRef = useRef(null);
   const { data: currentWeatherData, isLoading } =
     useGetCurrentCityWeatherQuery(currentCity);
@@ -66,17 +68,25 @@ const Home = () => {
     setForecasts();
   }, [forecastData?.list]);
 
+  function handleClearButton() {
+    searchRef.current.value = "";
+    setShowClearButton(false);
+  }
+
   // handle sumbit of search feature
-  function handleSubmit(e) {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     setCurrentCity(searchRef.current.value);
-  }
+    if (searchRef.current.value) {
+      setShowClearButton(true);
+    }
+  }, [currentCity]);
 
   return (
     <div className="w-full h-auto">
       <div className="flex justify-between relative ml-10 overflow-y-auto">
         {/* left Info */}
-        <div>
+        <div className="mr-8">
           {/* Upper Part */}
           <div className="flex justify-between items-center py-10 border-b border-slate-100">
             <div>
@@ -87,20 +97,22 @@ const Home = () => {
             </div>
 
             <div className="flex gap-4 items-center">
+              {/* Search Field */}
               <form
-                className="bg-[#EEF2F3] flex items-center"
+                className="bg-[#EEF2F3] relative rounded"
                 onSubmit={handleSubmit}
               >
                 <FontAwesomeIcon
                   icon={faMagnifyingGlass}
-                  className="text-[#75787aae] p-3 text-[1.1rem] rounded bg-[#EEF2F3]"
+                  className="text-[#75787aae] text-[1.1rem] absolute rounded top-1/2 left-2 -translate-y-1/2 bg-[#EEF2F3]"
                 />
                 <input
-                  className="outline-none border-none rounded py-3  text-sm bg-[#EEF2F3]"
+                  className="outline-none max-w-[250px] border-none rounded py-3 px-9 text-sm bg-[#EEF2F3]"
                   type="text"
                   placeholder="Search location"
                   ref={searchRef}
                 />
+                {showClearButton && (<IoIosCloseCircleOutline onClick={handleClearButton} className="text-[#75787aae] absolute  top-1/2 right-2 -translate-y-1/2 text-[1.5rem] " />)}
               </form>
               <FontAwesomeIcon
                 icon={faUser}
@@ -119,17 +131,17 @@ const Home = () => {
             </h2>
             <div className="mt-4 flex gap-4">
               {windProperties.map((windProperty, index) => (
-              <WindPropertyCard  windProperty={windProperty} />
+              <WindPropertyCard key={index}  windProperty={windProperty} />
               ))}
             </div>
           </div>
 
           {/* Future forecasts  */}
-          <div className="mt-4">
+          <div className="my-8">
             <h1 className="text-[#0F2443] font-semibold text-[1.2rem] mb-4">
               Today's forecast
             </h1>
-            <div className="flex gap-4 flex-col">
+            <div className="flex gap-4 flex-wrap w-full max-w-[900px]">
               {oneDayForecasts.map((oneDayForecast, index) => (
                 <TodaysForecastCard
                   key={index}
