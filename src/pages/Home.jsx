@@ -5,13 +5,17 @@ import {
 } from "../services/weather";
 
 import WeatherSideBarDetails from "../components/WeatherSideBarDetails";
-import WindPropertyCard  from "../components/WindPropertyCard";
+import WindPropertyCard from "../components/WindPropertyCard";
 import TodaysForecastCard from "../components/TodaysForecastCard";
 
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBell } from "@fortawesome/free-regular-svg-icons";
-import { faMagnifyingGlass, faWind, faLocationArrow } from "@fortawesome/free-solid-svg-icons";
+import {
+  faMagnifyingGlass,
+  faWind,
+  faLocationArrow,
+} from "@fortawesome/free-solid-svg-icons";
 import moment from "moment-timezone";
 
 const Home = () => {
@@ -74,14 +78,18 @@ const Home = () => {
   }
 
   // handle sumbit of search feature
-  const handleSubmit = useCallback((e) => {
-    e.preventDefault();
-    setCurrentCity(searchRef.current.value);
-    if (searchRef.current.value) {
-      setShowClearButton(true);
-    }
-  }, [currentCity]);
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setCurrentCity(searchRef.current.value);
+      if (searchRef.current.value) {
+        setShowClearButton(true);
+      }
+    },
+    [currentCity]
+  );
 
+  
   return (
     <div className="w-full h-auto">
       <div className="flex justify-between relative ml-10 overflow-y-auto">
@@ -112,7 +120,12 @@ const Home = () => {
                   placeholder="Search location"
                   ref={searchRef}
                 />
-                {showClearButton && (<IoIosCloseCircleOutline onClick={handleClearButton} className="text-[#75787aae] absolute  top-1/2 right-2 -translate-y-1/2 text-[1.5rem] " />)}
+                {showClearButton && (
+                  <IoIosCloseCircleOutline
+                    onClick={handleClearButton}
+                    className="text-[#75787aae] absolute  top-1/2 right-2 -translate-y-1/2 text-[1.5rem] "
+                  />
+                )}
               </form>
               <FontAwesomeIcon
                 icon={faUser}
@@ -131,7 +144,7 @@ const Home = () => {
             </h2>
             <div className="mt-4 flex gap-4">
               {windProperties.map((windProperty, index) => (
-              <WindPropertyCard key={index}  windProperty={windProperty} />
+                <WindPropertyCard key={index} windProperty={windProperty} />
               ))}
             </div>
           </div>
