@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isOpen: false,
-    modalDetails: {},
+    modalForecastDetails: {},
 }
 
 const modalSlice = createSlice({
@@ -16,9 +16,8 @@ const modalSlice = createSlice({
            state.isOpen = false;
         },
         getDetails: (state, action) => {
-            state.modalDetails = action.payload;
+            state.modalForecastDetails = action.payload;
         }
-        
     }
 })
 

@@ -23,10 +23,8 @@ const Home = () => {
   const [oneDayForecasts, setOneDayForecasts] = useState([]);
   const [showClearButton, setShowClearButton] = useState(false);
   const searchRef = useRef(null);
-  const { data: currentWeatherData, isLoading } =
-    useGetCurrentCityWeatherQuery(currentCity);
-  const { data: forecastData, isLoading: foreCastDataLoading } =
-    useGet5DayForecastQuery(currentCity);
+  const { data: currentWeatherData, isLoading: currentWeatherLoading } = useGetCurrentCityWeatherQuery(currentCity);
+  const { data: forecastData, isLoading: foreCastDataLoading } = useGet5DayForecastQuery(currentCity);
 
   const month = moment()
     .utcOffset(currentWeatherData?.timezone / 60)
@@ -34,7 +32,7 @@ const Home = () => {
   const year = moment()
     .utcOffset(currentWeatherData?.timezone / 60)
     .format("YYYY");
-  const date = moment()
+  const formattedDate = moment()
     .utcOffset(currentWeatherData?.timezone / 60)
     .format("dddd, MMMM Do YYYY");
 
@@ -77,7 +75,7 @@ const Home = () => {
     setShowClearButton(false);
   }
 
-  // handle sumbit of search feature
+  // handle submit of search 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
@@ -89,19 +87,19 @@ const Home = () => {
     [currentCity]
   );
 
-  
+  console.log(currentWeatherData)
   return (
     <div className="w-full h-auto">
-      <div className="flex justify-between relative ml-10 overflow-y-auto">
+      <div className="flex justify-between relative ml-10">
         {/* left Info */}
-        <div className="mr-8">
+        <div className="mr-8 w-[70%]">
           {/* Upper Part */}
           <div className="flex justify-between items-center py-10 border-b border-slate-100">
             <div>
               <h2 className="text-[#0F2443] font-bold text-[1.5rem]">
                 {month} {year}
               </h2>
-              <p className="text-[#75787aae] text-[.9rem]">{date}</p>
+              <p className="text-[#75787aae] text-[.9rem]">{formattedDate}</p>
             </div>
 
             <div className="flex gap-4 items-center">
@@ -159,6 +157,7 @@ const Home = () => {
                 <TodaysForecastCard
                   key={index}
                   oneDayForecast={oneDayForecast}
+                  windProperties={windProperties}
                 />
               ))}
             </div>

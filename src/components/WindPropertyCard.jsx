@@ -5,7 +5,7 @@ const WindPropertyCard = ({ windProperty }) => {
 
   return (
       <div 
-        className=" py-9 px-10 flex items-center gap-4 bg-[#eef2f38f] rounded-md" 
+        className="p-9  flex items-center gap-4 bg-[#eef2f38f] rounded-md" 
       >
         <FontAwesomeIcon
           icon={windProperty.icon}
@@ -13,7 +13,7 @@ const WindPropertyCard = ({ windProperty }) => {
         />
         <div>
           <p className="text-[#75787aae] text-[1.1rem]">{windProperty.title}</p>
-          <h1 className="text-[2rem] font-semibold text-[#0F2443]">
+          <h1 className="text-[1.9rem] font-semibold text-[#0F2443]">
             {windProperty.attribute}
           </h1>
         </div>

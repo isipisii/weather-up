@@ -6,7 +6,6 @@ import { WiSunrise } from "react-icons/wi";
 import { BsDropletFill } from "react-icons/bs";
 
 const WeatherSideBarDetails = ({ currentWeatherData }) => {
-  console.log(currentWeatherData)
 
   const [currentTime, setCurrentTime] = useState(
     moment()
@@ -22,7 +21,7 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
         .unix(currentWeatherData?.sys?.sunrise)
         .startOf("night")
         .fromNow(),
-        icon: <WiSunrise className="text-white text-[2.2rem]" />,
+        icon: <WiSunrise className="text-yellow-400 text-[2.2rem]" />,
     },
     {
       name: "Sunset",
@@ -31,7 +30,7 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
         .unix(currentWeatherData?.sys?.sunset)
         .endOf("night")
         .fromNow(),
-      icon: <TbSunset2 className="text-white text-[2.2rem]"/>,
+      icon: <TbSunset2 className="text-yellow-500 text-[2.2rem]"/>,
     },
   ];
 
@@ -48,7 +47,7 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
   }, [currentWeatherData?.timezone]);
 
   return (
-    <div className="max-w-[500px] w-auto h-auto bg-gradient-to-r from-[#315a94] to-[#0a1f3d]">
+    <div className=" w-[30%] h-auto bg-gradient-to-r from-[#315a94] to-[#0a1f3d]">
       <div className="w-auto h-full p-8">
         <div className="flex items-center justify-between">
           <div className="mr-8">
