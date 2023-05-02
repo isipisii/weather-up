@@ -47,7 +47,7 @@ const WeatherSideBarDetails = ({ currentWeatherData }) => {
   }, [currentWeatherData?.timezone]);
 
   return (
-    <div className=" w-[30%] h-auto bg-gradient-to-r from-[#315a94] to-[#0a1f3d]">
+    <div className=" w-[30%] h-auto bg-gradient-to-r from-[#315a94] to-[#0a1f3d] hidden sm:block">
       <div className="w-auto h-full p-8">
         <div className="flex items-center justify-between">
           <div className="mr-8">

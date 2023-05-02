@@ -22,9 +22,13 @@ const Home = () => {
   const [currentCity, setCurrentCity] = useState("Manila");
   const [oneDayForecasts, setOneDayForecasts] = useState([]);
   const [showClearButton, setShowClearButton] = useState(false);
-  const searchRef = useRef(null);
-  const { data: currentWeatherData, isLoading: currentWeatherLoading } = useGetCurrentCityWeatherQuery(currentCity);
-  const { data: forecastData, isLoading: foreCastDataLoading } = useGet5DayForecastQuery(currentCity);
+  // const searchRef = useRef(null);
+  // test
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data: currentWeatherData, isLoading: currentWeatherLoading } =
+    useGetCurrentCityWeatherQuery(currentCity);
+  const { data: forecastData, isLoading: foreCastDataLoading } =
+    useGet5DayForecastQuery(currentCity);
 
   const month = moment()
     .utcOffset(currentWeatherData?.timezone / 60)
@@ -70,29 +74,36 @@ const Home = () => {
     setForecasts();
   }, [forecastData?.list]);
 
+  function handleOnChange(e) {
+    const value = e.target.value;
+
+    setSearchTerm(value);
+    if (value) {
+      setShowClearButton(true)
+    } else {
+      setShowClearButton(false)
+    }
+  }
+
   function handleClearButton() {
-    searchRef.current.value = "";
+    setSearchTerm("");
     setShowClearButton(false);
   }
 
-  // handle submit of search 
+  // handle submit of search
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      setCurrentCity(searchRef.current.value);
-      if (searchRef.current.value) {
-        setShowClearButton(true);
-      }
+      setCurrentCity(searchTerm);
     },
     [currentCity]
   );
 
-  console.log(currentWeatherData)
   return (
     <div className="w-full h-auto">
       <div className="flex justify-between relative ml-10">
         {/* left Info */}
-        <div className="mr-8 w-[70%]">
+        <div className="mr-8   w-[100%] sm:w-[70%] ">
           {/* Upper Part */}
           <div className="flex justify-between items-center py-10 border-b border-slate-100">
             <div>
@@ -116,7 +127,9 @@ const Home = () => {
                   className="outline-none max-w-[250px] border-none rounded py-3 px-9 text-sm bg-[#EEF2F3]"
                   type="text"
                   placeholder="Search location"
-                  ref={searchRef}
+                  // ref={searchRef}
+                  onChange={handleOnChange}
+                  value={searchTerm}
                 />
                 {showClearButton && (
                   <IoIosCloseCircleOutline
@@ -140,7 +153,7 @@ const Home = () => {
             <h2 className="text-[#0F2443] font-semibold text-[1.2rem]">
               Today's Wind Overview
             </h2>
-            <div className="mt-4 flex gap-4">
+            <div className="mt-4 flex gap-4 flex-col sm:flex-row">
               {windProperties.map((windProperty, index) => (
                 <WindPropertyCard key={index} windProperty={windProperty} />
               ))}
