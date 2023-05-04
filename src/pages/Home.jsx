@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useGetCurrentCityWeatherQuery,
   useGet5DayForecastQuery,
@@ -96,8 +96,10 @@ const Home = () => {
       e.preventDefault();
       setCurrentCity(searchTerm);
     },
-    [currentCity]
+    [searchTerm]
   );
+
+  
 
   return (
     <div className="w-full h-auto">
